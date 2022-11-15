@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import seaborn as sns
 sns.set_style('darkgrid', {'axes.facecolor': '0.9'})
 import warnings
