@@ -131,10 +131,11 @@ if st.sidebar.checkbox('Show Prediction'):
     # Prediction
     pred = logreg.predict(data)
     #st.write(pred)
-    if pred == 0:
-        st.write('Pasien tidak memiliki diabetes')
-    else:
-        st.write('Pasien memiliki diabetes')
+    if predict:
+        if pred == 0:
+            st.write('Anda tidak memiliki diabetes')
+        else:
+            st.write('Anda memiliki resiko terkena diabetes')
 
 # Sidebar About 
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, mean_absolute_error, roc_auc_score, roc_curve, auc
