@@ -4,3 +4,4 @@ matplotlib
 seaborn 
 imbalanced-learn
 scikit-learn
+plotly_express
