@@ -1,12 +1,12 @@
 import streamlit as st
 import pandas as pd
-import matplotlib.pyplot as plt
+import matplotlib as plt
 import seaborn as sns
 sns.set_style('darkgrid', {'axes.facecolor': '0.9'})
 import warnings
 warnings.filterwarnings('ignore')
 
-
+st.set_page_config(page_title="Diabetes Prediction", layout="wide")
 
 # Load the data
 df = pd.read_csv('diabetes_fix.csv')
