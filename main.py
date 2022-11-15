@@ -5,7 +5,7 @@ import seaborn as sns
 sns.set_style('darkgrid', {'axes.facecolor': '0.9'})
 import warnings
 warnings.filterwarnings('ignore')
-
+import plotly.express as px
 st.set_page_config(page_title="Diabetes Prediction", layout="wide")
 
 # Load the data
@@ -33,11 +33,11 @@ if st.sidebar.checkbox('Show Histogram'):
 if st.sidebar.checkbox('Show Scatter Plot'):
     st.header('Scatter Plot')
     st.write('Pilih fitur yang ingin ditampilkan scatter plotnya')
-    fitur1 = st.selectbox('Fitur 1', ('Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI', 'DiabetesPedigreeFunction', 'Age'))
-    fitur2 = st.selectbox('Fitur 2', ('Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI', 'DiabetesPedigreeFunction', 'Age'))
+    fitur1 = st.selectbox('X', ('Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI', 'DiabetesPedigreeFunction', 'Age'))
+    fitur2 = st.selectbox('Y', ('Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI', 'DiabetesPedigreeFunction', 'Age'))
     st.write('Scatter Plot dari fitur', fitur1, 'dan', fitur2)
     fig, ax = plt.subplots()
-    plt.scatter(df[fitur1], df[fitur2])
+    plt.scatter(x=df[fitur1], y=df[fitur2], c=df['Outcome'], cmap='rainbow')
     st.pyplot(fig)
 
 # Density Plot
