@@ -94,8 +94,8 @@ scaler = MinMaxScaler()
 X = scaler.fit_transform(X)
 #print(X)
 from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1)
+X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2, random_state=1)
 # Logistic Regression
 from sklearn.linear_model import LogisticRegression
 logreg = LogisticRegression()
@@ -111,6 +111,7 @@ st.sidebar.subheader('Prediction')
 if st.sidebar.checkbox('Show Prediction'):
 # Input
     st.subheader('Prediction Input')
+    nama = st.text_input('Masukkan nama', 'Nama' )
     preganancies = st.number_input('Masukkan Jumlah Kehamilan     :',0)
     glucose = st.number_input('Masukkan Kadar Glukosa     :',0)
     bloodpressure = st.number_input('Masukkan Tekanan Darah     :',0)
@@ -127,15 +128,15 @@ if st.sidebar.checkbox('Show Prediction'):
 # Button
 
     #st.subheader('Prediction')
-    #st.write(data)
     # Prediction
     pred = logreg.predict(data)
     #st.write(pred)
     if predict:
+        #st.write(pred)
         if pred == 0:
-            st.write('Anda tidak memiliki diabetes')
+            st.write('Hiiii, ',nama,'. Kamu aman dari diabetes, tetap jaga kesehatan ya!')
         else:
-            st.write('Anda memiliki resiko terkena diabetes')
+            st.write('Semoga cepat sembuh ya ',nama,'. Kamu memiliki resiko terkena diabetes, jangan lupa untuk ke dokter ya!')
 
 # Sidebar About 
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, mean_absolute_error, roc_auc_score, roc_curve, auc
