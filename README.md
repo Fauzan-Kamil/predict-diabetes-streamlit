@@ -1,2 +1,2 @@
 # Prediksi Diabetes Menggunakan Streamlit
-Algoritma yang digunakan Logistic Regresi
+Algoritma yang digunakan Support Vector Machine
