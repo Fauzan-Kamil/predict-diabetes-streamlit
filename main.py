@@ -5,7 +5,9 @@ import seaborn as sns
 sns.set_style('darkgrid', {'axes.facecolor': '0.9'})
 import warnings
 warnings.filterwarnings('ignore')
-import plotly.express as px
+import pickle 
+from PIL import Image
+
 st.set_page_config(page_title="Diabetes Prediction", layout="wide")
 
 # Load the data
@@ -16,6 +18,8 @@ st.write('Dataset yang digunakan adalah dataset diabetes dari kaggle')
 st.write('Dataset : https://www.kaggle.com/datasets/akshaydattatraykhare/diabetes-dataset')
 st.write('')
 st.write(df.head())
+divider = st.container()
+divider.markdown('---')
 
 # Sidebar Data Visualization
 st.sidebar.subheader('Data Visualization')
@@ -41,7 +45,7 @@ if st.sidebar.checkbox('Show Scatter Plot'):
     st.pyplot(fig)
 
 # Density Plot
-if st.sidebar.checkbox('Show Barplot'):
+if st.sidebar.checkbox('Show Data Vis'):
     st.subheader('Jumlah pasien diabetes')
     fig, ax = plt.subplots()
     a = sns.countplot(x='Outcome', data=df)
@@ -49,7 +53,10 @@ if st.sidebar.checkbox('Show Barplot'):
         a.bar_label(j, label_type='edge')
     a.set_xlabel('Outcome')
     st.pyplot(fig)
+    st.write('Bisa dilihat dari grafik diatas bahwa banyak orang yang tidak terkena diabetes dan sedikit orang yang terkena diabetes yaitu 268 orang. ')
 
+    divider = st.container()
+    divider.markdown('---')
     st.subheader('Jumlah pasien diabetes berdasarkan usia')
     fig, ax = plt.subplots()
     a = sns.countplot(x='Outcome', hue='Age_grup', data=df)
@@ -57,8 +64,11 @@ if st.sidebar.checkbox('Show Barplot'):
         a.bar_label(j, label_type='edge')
     a.set_xlabel('Outcome')
     plt.legend(loc='upper right', title='Kelompok Umur')
-    st.pyplot(fig)    
+    st.pyplot(fig) 
+    st.write('Banyak pasien yang terkena diabetes adalah yang berumur 26-35 tahun atau dewasa awal dengan jumlah 86 orang lalu diikutu dengan dewasa akhir yaitu 46-55 tahun dengan jumlah 79 orang dan yang paling sedikit adalah manula dengan jumlah 4 orang.')
 
+    divider = st.container()
+    divider.markdown('---')
     st.subheader('Jumlah pasien diabetes berdasarkan BMI')
     fig, ax = plt.subplots()
     a = sns.countplot(x='Outcome', hue='BMI_grup', data=df)
@@ -67,6 +77,7 @@ if st.sidebar.checkbox('Show Barplot'):
     a.set_xlabel('Outcome')
     plt.legend(loc='upper right', title='Kelompok BMI')
     st.pyplot(fig)    
+    st.write('Berdasarkan kelompok BMI yang paling banyak terkena diabetes adalah yang memiliki BMI lebih dari 30 (Obesitasa II) dengan jumlah 219 orang lalu diikuti dengan BMI 25 - 29.9 (Obesitas) dengan jumlah 40 orang.')
 
 # Correlation Plot
 if st.sidebar.checkbox('Show Correlation Plot'):
@@ -76,34 +87,8 @@ if st.sidebar.checkbox('Show Correlation Plot'):
     st.pyplot(fig)
 
 # Sidebar Prediction
-#st.sidebar.header('Prediction')
-# Split the data
-X = df.drop(['Outcome', 'Age_grup', 'BMI_grup'], axis=1)
-y = df['Outcome']
-# Oversampling
-# Imbalance data
-from imblearn.over_sampling import SMOTE
-from collections import Counter
-smote = SMOTE()
-X, y = smote.fit_resample(X, y)
-#print(sorted(Counter(y).items()))
-# Feature Scaling
-# MinMaxScaler
-from sklearn.preprocessing import MinMaxScaler
-scaler = MinMaxScaler()
-X = scaler.fit_transform(X)
-#print(X)
-from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=1)
-X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.2, random_state=1)
-# Logistic Regression
-from sklearn.linear_model import LogisticRegression
-logreg = LogisticRegression()
-logreg.fit(X_train, y_train)
-pred_logreg = logreg.predict(X_test)
+model = pd.read_pickle('model_svm.pkl')
 
-# Probability 
-y_train_pred = logreg.predict_proba(X_train)[:,1]
 
 # User Input
 
@@ -129,7 +114,7 @@ if st.sidebar.checkbox('Show Prediction'):
 
     #st.subheader('Prediction')
     # Prediction
-    pred = logreg.predict(data)
+    pred = model.predict(data)
     #st.write(pred)
     if predict:
         #st.write(pred)
@@ -139,63 +124,58 @@ if st.sidebar.checkbox('Show Prediction'):
             st.write('Semoga cepat sembuh ya ',nama,'. Kamu memiliki resiko terkena diabetes, jangan lupa untuk ke dokter ya!')
 
 # Sidebar About 
-from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, mean_absolute_error, roc_auc_score, roc_curve, auc
-from sklearn.metrics import precision_score, recall_score, f1_score
-from sklearn.model_selection import cross_val_score, cross_val_predict
 st.sidebar.subheader('About Model')
 if st.sidebar.checkbox('Show About'):
-    # Akurasi Model
-    st.subheader('Akurasi Model')
-    st.write('Akurasi Model     : ', (accuracy_score(y_test, pred_logreg)*100).round(2), '%')
-    st.write('Precision Score   : ', (precision_score(y_test, pred_logreg)*100).round(2), '%')
-    st.write('Recall Score      : ', (recall_score(y_test, pred_logreg)*100).round(2), '%')
-    st.write('F1 Score          : ', (f1_score(y_test, pred_logreg)*100).round(2), '%')
-    st.write('Mean Absolute Error : ', (mean_absolute_error(y_test, pred_logreg)*100).round(2), '%')
+    st.subheader('Jumlah Data')
+    st.write('Jumlah data yang digunakan adalah', 1000)
+    st.write('Jumlah data yang digunakan untuk training adalah', 640)
+    st.write('Jumlah data yang digunakan untuk testing adalah', 200)
+    st.write('Jumlah data yang digunakan untuk validation adalah', 160)
 
-    st.subheader('Confusion Matrix')
-    fig, ax = plt.subplots()
-    sns.heatmap(confusion_matrix(y_test, pred_logreg), annot=True, fmt='.2f', cmap='summer')
-    plt.xlabel('Predicted')
-    plt.ylabel('Actual')
-    plt.title('Confusion Matrix')
-    st.pyplot(fig)
-    
-    # ROC Curve Train
-    st.subheader('ROC Curve Train')
-    fig, ax = plt.subplots()
-    fpr, tpr, thresholds = roc_curve(y_train, y_train_pred)
-    roc_auc = roc_auc_score(y_train, y_train_pred)
+    divider = st.container()
+    divider.markdown('---')
+    st.subheader('Akurasi Model Support Vector Machine')
+    st.write('Accuracy  : 0.78')
+    st.write('Precision : 0.75')
+    st.write('Recall    : 0.82')
+    st.write('F1 Score  : 0.67')
+    st.write('AUC       : 0.77')
+    st.write('MAE       : 0.225')
 
+    divider = st.container()
+    divider.markdown('---')
+# Load Gambar
+    st.subheader('Classification Report')
+    image = Image.open('classification_svm.png')
+    st.image(image, caption='Model Support Vector Machine', use_column_width=True)
 
-    # Plot ROC curve
-    plt.plot(fpr, tpr, label='ROC curve (area = %0.3f)' % roc_auc)
-    plt.plot([0, 1], [0, 1], 'k--')  # random predictions curve
-    plt.xlim([0.0, 1.0])
-    plt.ylim([0.0, 1.0])
-    plt.xlabel('False Positive Rate or (1 - Specifity)')
-    plt.ylabel('True Positive Rate or (Sensitivity)')
-    #plt.title('Receiver Operating Characteristic')
-    plt.title('ROC Curve Train')
-    plt.legend(loc="lower right")
-    st.pyplot(fig)
+    divider = st.container()
+    divider.markdown('---')
+    st.subheader('Confusion Matrix Trainig')
+    image = Image.open('cm-train.png')
+    st.image(image, caption='Comfusion Matrix Training Model SVM', use_column_width=True)
 
-    # Test
-    st.subheader('ROC Curve Test')
-    fig, ax = plt.subplots()
-    fpr, tpr, thresholds = roc_curve(y_test, pred_logreg)
-    roc_auc = roc_auc_score(y_test, pred_logreg)
+    divider = st.container()
+    divider.markdown('---')
+    st.subheader('Confusion Matrix Testing')
+    image = Image.open('cm-test.png')
+    st.image(image, caption='Comfusion Matrix Testing Model SVM', use_column_width=True)
 
+    divider = st.container()
+    divider.markdown('---')
+    st.subheader('Confusion Matrix Validation')
+    image = Image.open('cm-val.png')
+    st.image(image, caption='Comfusion Matrix Validation Model SVM', use_column_width=True)
 
-    # Plot ROC curve
-    plt.plot(fpr, tpr, label='ROC curve (area = %0.3f)' % roc_auc)
-    plt.plot([0, 1], [0, 1], 'k--')  # random predictions curve
-    plt.xlim([0.0, 1.0])
-    plt.ylim([0.0, 1.0])
-    plt.xlabel('False Positive Rate or (1 - Specifity)')
-    plt.ylabel('True Positive Rate or (Sensitivity)')
-    #plt.title('Receiver Operating Characteristic')
-    plt.title('ROC Curve Test')
-    plt.legend(loc="lower right")
-    st.pyplot(fig)
+    divider = st.container()
+    divider.markdown('---')
+    st.subheader('ROC Curve')
+    image = Image.open('model_svm.png')
+    st.image(image, caption='ROC Curve Model SVM', use_column_width=True)
 
+    divider = st.container()
+    divider.markdown('---')
+    st.subheader('ROC Curve Testing')
+    image = Image.open('model_svm-test.png')
+    st.image(image, caption='ROC Curve Model SVM Test', use_column_width=True)
 
