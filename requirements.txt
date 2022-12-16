@@ -6,3 +6,4 @@ imbalanced-learn
 scikit-learn
 pickle5
 pillow
+numpy

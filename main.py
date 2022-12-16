@@ -11,7 +11,7 @@ from PIL import Image
 st.set_page_config(page_title="Diabetes Prediction", layout="wide")
 
 # Load the data
-df = pd.read_csv('diabetes_fix.csv')
+df = pd.read_csv('Data/diabetes_fix.csv')
 st.title('Diabetes Prediction App')
 st.write('Aplikasi ini memprediksi kemungkinan seseorang menderita diabetes berdasarkan beberapa fitur yang dimasukan')
 st.write('Dataset yang digunakan adalah dataset diabetes dari kaggle')
@@ -146,36 +146,36 @@ if st.sidebar.checkbox('Show About'):
     divider.markdown('---')
 # Load Gambar
     st.subheader('Classification Report')
-    image = Image.open('classification_svm.png')
+    image = Image.open('img/classification_svm.png')
     st.image(image, caption='Model Support Vector Machine', use_column_width=True)
 
     divider = st.container()
     divider.markdown('---')
     st.subheader('Confusion Matrix Trainig')
-    image = Image.open('cm-train.png')
+    image = Image.open('img/cm-train.png')
     st.image(image, caption='Comfusion Matrix Training Model SVM', use_column_width=True)
 
     divider = st.container()
     divider.markdown('---')
     st.subheader('Confusion Matrix Testing')
-    image = Image.open('cm-test.png')
+    image = Image.open('img/cm-test.png')
     st.image(image, caption='Comfusion Matrix Testing Model SVM', use_column_width=True)
 
     divider = st.container()
     divider.markdown('---')
     st.subheader('Confusion Matrix Validation')
-    image = Image.open('cm-val.png')
+    image = Image.open('img/cm-val.png')
     st.image(image, caption='Comfusion Matrix Validation Model SVM', use_column_width=True)
 
     divider = st.container()
     divider.markdown('---')
     st.subheader('ROC Curve')
-    image = Image.open('model_svm.png')
+    image = Image.open('img/model_svm.png')
     st.image(image, caption='ROC Curve Model SVM', use_column_width=True)
 
     divider = st.container()
     divider.markdown('---')
     st.subheader('ROC Curve Testing')
-    image = Image.open('model_svm-test.png')
+    image = Image.open('img/model_svm-test.png')
     st.image(image, caption='ROC Curve Model SVM Test', use_column_width=True)
 
