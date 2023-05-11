@@ -30,7 +30,7 @@ Prediksi Diabetes di deployment Streamlit dengan algoritma SVM adalah sebuah apl
 ## Requirements
 
 - Python 3.9
-- Streamlit==1.14.1
+- Streamlit 1.14.1
 - Pandas 1.3.3
 - Numpy 1.22.4
 - Scikit-learn 1.0.2
