@@ -57,8 +57,9 @@ Prediksi Diabetes di deployment Streamlit dengan algoritma SVM adalah sebuah apl
 4. Bisa jalankan file `diabetes.ipynb` atau `main.py`
 
 > _Insight_ dari dataset diabetes dapat dilihat di file [diabetes.ipynb](https://github.com/Fauzan-Kamil/predict-diabetes-streamlit/blob/master/diabetes.ipynb)
+
 ```
-Bagi yang penasaran dengan insights dari dataset diabetes, yuk cek file diabetes.ipynb! 
+Bagi yang penasaran dengan insights dari dataset diabetes, yuk cek file diabetes.ipynb!
 Di sana tersedia informasi menarik yang dapat meningkatkan pemahaman kita tentang dataset tersebut.
 ```
 
@@ -86,4 +87,4 @@ Di sana tersedia informasi menarik yang dapat meningkatkan pemahaman kita tentan
 
 ## Create a
 
-Author : Fauzan Kamil
+Author : [Fauzan Kamil](https://github.com/Fauzan-Kamil)
