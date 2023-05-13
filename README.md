@@ -21,7 +21,7 @@
 
 ## Link to Streamlit App
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://fauzan-kamil-predict-diabetes-streamlit-main-3dnkjf.streamlit.app/)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://prediksi-diabetes.streamlit.app/)
 
 ## Introduction
 
