@@ -83,15 +83,12 @@ if st.sidebar.checkbox('Show Data Vis'):
 if st.sidebar.checkbox('Show Correlation Plot'):
     st.subheader('Correlation Plot')
     fig, ax = plt.subplots()
-    a = sns.heatmap(df.corr(), annot=True, fmt='.2f', cmap='coolwarm')
+    sns.heatmap(df.corr(), annot=True, fmt='.2f', cmap='coolwarm', ax=ax)
     st.pyplot(fig)
 
 # Sidebar Prediction
 model = pd.read_pickle('model_svm.pkl')
-
-
 # User Input
-
 st.sidebar.subheader('Prediction')
 if st.sidebar.checkbox('Show Prediction'):
 # Input
