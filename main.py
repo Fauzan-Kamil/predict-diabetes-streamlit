@@ -11,7 +11,7 @@ from PIL import Image
 st.set_page_config(page_title="Diabetes Prediction", layout="wide")
 
 # Load the data
-df = pd.read_csv('Data\diabetes_fix.csv')
+df = pd.read_csv('Data/diabetes_fix.csv')
 st.title('Diabetes Prediction App')
 st.write('Aplikasi ini memprediksi kemungkinan seseorang menderita diabetes berdasarkan beberapa fitur yang dimasukan')
 st.write('Dataset yang digunakan adalah dataset diabetes dari kaggle')
