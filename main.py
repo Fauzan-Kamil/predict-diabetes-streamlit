@@ -102,7 +102,13 @@ elif selected == "Data Visualisation":
         )
     with row3_0:
         st.subheader('Korelasi antar fitur')
+        # Handling missing value with fillna
+        df = df.fillna(df.mean())
+
+        # Creating correlation plot with plotly express
         fig = px.imshow(df.corr(), color_continuous_scale='Blues')
+
+        # Displaying correlation plot
         st.plotly_chart(fig)
 elif selected == "Prediction":
     with row0_1:
