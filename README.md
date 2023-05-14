@@ -67,6 +67,8 @@ Di sana tersedia informasi menarik yang dapat meningkatkan pemahaman kita tentan
 
 ```
 📦predict-diabetes-streamlit
+ ┣ 📂.ipynb_checkpoints
+ ┃ ┗ 📜diabetes-checkpoint.ipynb
  ┣ 📂Data
  ┃ ┣ 📜diabetes.csv
  ┃ ┗ 📜diabetes_fix.csv
@@ -77,6 +79,7 @@ Di sana tersedia informasi menarik yang dapat meningkatkan pemahaman kita tentan
  ┃ ┣ 📜cm-val.png
  ┃ ┣ 📜model_svm-test.png
  ┃ ┗ 📜model_svm.png
+ ┣ 📜app.py
  ┣ 📜diabetes - Jupyter Notebook.pdf
  ┣ 📜diabetes.ipynb
  ┣ 📜main.py
