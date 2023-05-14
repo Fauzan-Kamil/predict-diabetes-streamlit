@@ -100,16 +100,6 @@ elif selected == "Data Visualisation":
         st.markdown(
             'Dari hasil analisis data, terlihat bahwa kondisi BMI memiliki korelasi yang kuat dengan kemungkinan seseorang terkena diabetes. Kelompok BMI yang paling berisiko adalah yang memiliki BMI lebih dari 30 (Obesitas II), dengan jumlah 219 orang yang terkena diabetes. Sementara itu, kelompok BMI 25-29,9 (Obesitas) juga memiliki risiko yang cukup tinggi dengan jumlah 40 orang yang terkena diabetes. Temuan ini menunjukkan betapa pentingnya menjaga kesehatan dan berat badan yang sehat untuk mencegah risiko terkena diabetes.'
         )
-    with row3_0:
-        st.subheader('Korelasi antar fitur')
-        # Handling missing value with fillna
-        df = df.fillna(df.mean())
-
-        # Creating correlation plot with plotly express
-        fig = px.imshow(df.corr(), color_continuous_scale='Blues')
-
-        # Displaying correlation plot
-        st.plotly_chart(fig)
 elif selected == "Prediction":
     with row0_1:
         st.subheader('Masukkan Data')
