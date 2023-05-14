@@ -1,179 +1,128 @@
 import streamlit as st
+from streamlit_option_menu import option_menu
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
-sns.set_style('darkgrid', {'axes.facecolor': '0.9'})
-import warnings
-warnings.filterwarnings('ignore')
-import pickle 
-from PIL import Image
-
+import numpy as np
+import plotly.express as px
 st.set_page_config(page_title="Diabetes Prediction", layout="wide")
+# Create menu
+selected = option_menu(
+    menu_title=None,
+    options=["Home", "Data Visualisation", "Prediction"],
+    icons=["house", "book", "calculator"],
+    menu_icon="cast",
+    default_index=0,
+    orientation="horizontal",
+)
 
-# Load the data
-df = pd.read_csv('Data/diabetes_fix.csv')
-st.title('Diabetes Prediction App')
-st.write('Aplikasi ini memprediksi kemungkinan seseorang menderita diabetes berdasarkan beberapa fitur yang dimasukan')
-st.write('Dataset yang digunakan adalah dataset diabetes dari kaggle')
-st.write('Dataset : https://www.kaggle.com/datasets/akshaydattatraykhare/diabetes-dataset')
-st.write('')
-st.write(df.head())
-divider = st.container()
-divider.markdown('---')
-
-# Sidebar Data Visualization
-st.sidebar.subheader('Data Visualization')
-# Histogram
-if st.sidebar.checkbox('Show Histogram'):
-    st.header('Histogram')
-    st.write('Pilih fitur yang ingin ditampilkan histogramnya')
-    fitur = st.selectbox('Fitur', ('Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI', 'DiabetesPedigreeFunction', 'Age'))
-    st.write('Histogram dari fitur', fitur)
-    fig, ax = plt.subplots()
-    plt.hist(df[fitur], bins=20)
-    st.pyplot(fig)
-
-# Scatter Plot
-if st.sidebar.checkbox('Show Scatter Plot'):
-    st.header('Scatter Plot')
-    st.write('Pilih fitur yang ingin ditampilkan scatter plotnya')
-    fitur1 = st.selectbox('X', ('Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI', 'DiabetesPedigreeFunction', 'Age'))
-    fitur2 = st.selectbox('Y', ('Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI', 'DiabetesPedigreeFunction', 'Age'))
-    st.write('Scatter Plot dari fitur', fitur1, 'dan', fitur2)
-    fig, ax = plt.subplots()
-    plt.scatter(x=df[fitur1], y=df[fitur2], c=df['Outcome'], cmap='rainbow')
-    st.pyplot(fig)
-
-# Density Plot
-if st.sidebar.checkbox('Show Data Vis'):
-    st.subheader('Jumlah pasien diabetes')
-    fig, ax = plt.subplots()
-    a = sns.countplot(x='Outcome', data=df)
-    for j in a.containers:
-        a.bar_label(j, label_type='edge')
-    a.set_xlabel('Outcome')
-    st.pyplot(fig)
-    st.write('Bisa dilihat dari grafik diatas bahwa banyak orang yang tidak terkena diabetes dan sedikit orang yang terkena diabetes yaitu 268 orang. ')
-
-    divider = st.container()
-    divider.markdown('---')
-    st.subheader('Jumlah pasien diabetes berdasarkan usia')
-    fig, ax = plt.subplots()
-    a = sns.countplot(x='Outcome', hue='Age_grup', data=df)
-    for j in a.containers:
-        a.bar_label(j, label_type='edge')
-    a.set_xlabel('Outcome')
-    plt.legend(loc='upper right', title='Kelompok Umur')
-    st.pyplot(fig) 
-    st.write('Banyak pasien yang terkena diabetes adalah yang berumur 26-35 tahun atau dewasa awal dengan jumlah 86 orang lalu diikutu dengan dewasa akhir yaitu 46-55 tahun dengan jumlah 79 orang dan yang paling sedikit adalah manula dengan jumlah 4 orang.')
-
-    divider = st.container()
-    divider.markdown('---')
-    st.subheader('Jumlah pasien diabetes berdasarkan BMI')
-    fig, ax = plt.subplots()
-    a = sns.countplot(x='Outcome', hue='BMI_grup', data=df)
-    for j in a.containers:
-        a.bar_label(j, label_type='edge')
-    a.set_xlabel('Outcome')
-    plt.legend(loc='upper right', title='Kelompok BMI')
-    st.pyplot(fig)    
-    st.write('Berdasarkan kelompok BMI yang paling banyak terkena diabetes adalah yang memiliki BMI lebih dari 30 (Obesitasa II) dengan jumlah 219 orang lalu diikuti dengan BMI 25 - 29.9 (Obesitas) dengan jumlah 40 orang.')
-
-# Correlation Plot
-if st.sidebar.checkbox('Show Correlation Plot'):
-    st.subheader('Correlation Plot')
-    fig, ax = plt.subplots()
-    sns.heatmap(df.corr(), annot=True, fmt='.2f', cmap='coolwarm', ax=ax)
-    st.pyplot(fig)
-
-# Sidebar Prediction
+row0_spacer1, row0_1, row0_spacer2= st.columns(
+    (0.1, 3.2, 0.1)
+)
+row1_spacer1, row1_1, row1_spacer2, row1_2 = st.columns((0.1, 1.5, 0.1, 1.5))
+#row1_spacer1, row1_1, row1_spacer2 = st.columns((0.1, 3.2, 0.1))
+row0_spacer3, row3_0, row0_spacer3= st.columns((0.1, 3.2, 0.1))
+# Load dataset
+df = pd.read_csv('Data/diabetes.csv')
+# Kelompok usia
+age_grup = []
+for i in df['Age']:
+    if i >= 17 and i <= 25:
+        age_grup.append('Remaja Akhir')
+    elif i >= 26 and i <= 35:
+        age_grup.append('Dewasa Awal')
+    elif i >= 36 and i <= 45:
+        age_grup.append('Dewasa Akhir')
+    elif i >= 46 and i <= 55:
+        age_grup.append('Lansia Awal')
+    elif i >= 56 and i <= 65:
+        age_grup.append('Lansia Akhir')
+    else:
+        age_grup.append('Manula')
+df['AgeGrup'] = age_grup
+# Kelompok BMI
+BMI_grup = []
+for i in df['BMI']:
+    if i >= 0 and i <= 18.5:
+        BMI_grup.append('Kurus')
+    elif i >= 18.6 and i <= 22.9:
+        BMI_grup.append('Normal')
+    elif i >= 23 and i <= 24.9:
+        BMI_grup.append('Gemuk')
+    elif i >= 25 and i <= 29.9:
+        BMI_grup.append('Obesitas')
+    else:
+        BMI_grup.append('Obesitas II')            
+df['BMIGrup'] = BMI_grup
+# Model
 model = pd.read_pickle('model_svm.pkl')
-# User Input
-st.sidebar.subheader('Prediction')
-if st.sidebar.checkbox('Show Prediction'):
-# Input
-    st.subheader('Prediction Input')
-    nama = st.text_input('Masukkan nama', 'Nama' )
-    preganancies = st.number_input('Masukkan Jumlah Kehamilan     :',0)
-    glucose = st.number_input('Masukkan Kadar Glukosa     :',0)
-    bloodpressure = st.number_input('Masukkan Tekanan Darah     :',0)
-    skinthickness = st.number_input('Masukkan Ketebalan Kulit     :',0)
-    insulin = st.number_input('Masukkan Insulin     :',0)
-    bmi = st.number_input('Masukkan BMI     :',0)
-    dpf = st.number_input('Masukkan Diabetes Pedigree Function     :',0)
-    age = st.number_input('Masukkan Usia     :',0)
-    data = [[preganancies, glucose, bloodpressure, skinthickness, insulin, bmi, dpf, age]]
-
-# Button
-    predict = st.button('Predict')
-
-# Button
-
-    #st.subheader('Prediction')
-    # Prediction
-    pred = model.predict(data)
-    #st.write(pred)
-    if predict:
-        #st.write(pred)
-        if pred == 0:
-            st.write('Hiiii, ',nama,'. Kamu aman dari diabetes, tetap jaga kesehatan ya!')
-        else:
-            st.write('Semoga cepat sembuh ya ',nama,'. Kamu memiliki resiko terkena diabetes, jangan lupa untuk ke dokter ya!')
-
-# Sidebar About 
-st.sidebar.subheader('About Model')
-if st.sidebar.checkbox('Show About'):
-    st.subheader('Jumlah Data')
-    st.write('Jumlah data yang digunakan adalah', 1000)
-    st.write('Jumlah data yang digunakan untuk training adalah', 640)
-    st.write('Jumlah data yang digunakan untuk testing adalah', 200)
-    st.write('Jumlah data yang digunakan untuk validation adalah', 160)
-
-    divider = st.container()
-    divider.markdown('---')
-    st.subheader('Akurasi Model Support Vector Machine')
-    st.write('Accuracy  : 0.78')
-    st.write('Precision : 0.75')
-    st.write('Recall    : 0.82')
-    st.write('F1 Score  : 0.67')
-    st.write('AUC       : 0.77')
-    st.write('MAE       : 0.225')
-
-    divider = st.container()
-    divider.markdown('---')
-
-# Load Gambar
-    st.subheader('Classification Report')
-    image = Image.open('img\classification_svm.png')
-    st.image(image, caption='Model Support Vector Machine', use_column_width=True)
-
-    divider = st.container()
-    divider.markdown('---')
-    st.subheader('Confusion Matrix Trainig')
-    image = Image.open('img\cm-train.png')
-    st.image(image, caption='Comfusion Matrix Training Model SVM', use_column_width=True)
-
-    divider = st.container()
-    divider.markdown('---')
-    st.subheader('Confusion Matrix Testing')
-    image = Image.open('img\cm-test.png')
-    st.image(image, caption='Comfusion Matrix Testing Model SVM', use_column_width=True)
-
-    divider = st.container()
-    divider.markdown('---')
-    st.subheader('Confusion Matrix Validation')
-    image = Image.open('img\cm-val.png')
-    st.image(image, caption='Comfusion Matrix Validation Model SVM', use_column_width=True)
-
-    divider = st.container()
-    divider.markdown('---')
-    st.subheader('ROC Curve')
-    image = Image.open('img\model_svm.png')
-    st.image(image, caption='ROC Curve Model SVM', use_column_width=True)
-
-    divider = st.container()
-    divider.markdown('---')
-    st.subheader('ROC Curve Testing')
-    image = Image.open('img\model_svm-test.png')
-    st.image(image, caption='ROC Curve Model SVM Test', use_column_width=True)
-
+# Handle selected option
+if selected == "Home":
+    row0_1.title("Diabetes Prediction App")
+    with row0_1:
+        st.markdown(
+            "Diabetes Prediction App adalah sebuah aplikasi yang berguna untuk memprediksi kemungkinan seseorang menderita diabetes berdasarkan beberapa fitur yang dimasukkan. Aplikasi ini menggunakan dataset diabetes dari Kaggle untuk melakukan prediksi. Dengan memasukkan fitur yang relevan, seperti kadar gula darah, tekanan darah, dan sebagainya, aplikasi ini dapat memberikan prediksi yang cukup akurat mengenai kemungkinan seseorang menderita diabetes. Aplikasi ini sangat bermanfaat bagi orang-orang yang ingin mengetahui apakah mereka berisiko terkena diabetes atau tidak, sehingga dapat memperbaiki pola makan dan gaya hidup mereka untuk mencegah terjadinya penyakit diabetes."
+        )
+        st.markdown('Dataset : https://www.kaggle.com/datasets/akshaydattatraykhare/diabetes-dataset')
+        st.write(df.head())
+elif selected == "Data Visualisation":
+    # Data Visualisasi dengan plotly
+    with row1_1:
+        st.subheader('Pilih fitur yang ingin ditampilkan histogramnya')
+        fitur = st.selectbox('Fitur', ('Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI', 'DiabetesPedigreeFunction', 'Age','Outcome'))
+        fig = px.histogram(df, x=fitur, color='Outcome', marginal='box', hover_data=df.columns)
+        st.plotly_chart(fig)
+        fig = px.histogram(df, x='Outcome', color='Pregnancies', barmode='group', hover_data=df.columns)
+        fig.update_layout(title='Jumlah pasien per kelompok kehamilan', xaxis_title='Outcome', yaxis_title='Jumlah', font=dict(size=15))
+        st.plotly_chart(fig)
+        st.markdown(
+            'Data menunjukkan bahwa pasien dengan 0 kehamilan merupakan kelompok yang paling banyak terkena diabetes dengan jumlah 38 orang, diikuti oleh kelompok dengan 3 kehamilan yang jumlahnya sebanyak 27 orang. Sementara itu, kelompok dengan 17 kehamilan memiliki jumlah pasien diabetes yang paling sedikit, hanya 1 orang. Perlu diperhatikan bahwa risiko terkena diabetes tidak selalu berkaitan dengan jumlah kehamilan seseorang, sehingga pemeriksaan secara rutin dan gaya hidup sehat tetap menjadi hal yang penting untuk dilakukan.'
+        )
+        fig = px.histogram(df, x='Outcome', color='AgeGrup', barmode='group', hover_data=df.columns)
+        fig.update_layout(title='Jumlah pasien per kelompok usia', xaxis_title='Outcome', yaxis_title='Jumlah', font=dict(size=15))
+        st.plotly_chart(fig)
+        st.markdown(
+            "Dari data yang dianalisis, terlihat bahwa kelompok usia 26-35 tahun atau dewasa awal memiliki jumlah pasien diabetes terbanyak, mencapai 86 orang. Sementara itu, kelompok dewasa akhir yaitu 46-55 tahun memiliki jumlah pasien diabetes yang hampir setara, mencapai 79 orang. Namun, terdapat perbedaan yang cukup signifikan pada kelompok manula dengan hanya terdapat 4 orang yang terkena diabetes. Hal ini menunjukkan bahwa usia masih menjadi faktor penting dalam kejadian diabetes pada pasien."
+        )
+    with row1_2:
+        st.subheader('Pilih fitur yang ingin ditampilkan scatter plotnya')
+        fitur1 = st.selectbox('Fitur 1', ('Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI', 'DiabetesPedigreeFunction', 'Age', 'Outcome'))
+        fitur2 = st.selectbox('Fitur 2', ('Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI', 'DiabetesPedigreeFunction', 'Age', 'Outcome'))
+        fig = px.scatter(df, x=fitur1, y=fitur2, color='Outcome', hover_data=df.columns)
+        st.plotly_chart(fig)
+        fig = px.histogram(df, x='Outcome', color='Outcome', hover_data=df.columns)
+        fig.update_layout(title='Jumlah Pasien Diabetes', xaxis_title='Outcome', yaxis_title='Jumlah', font=dict(size=15))
+        st.plotly_chart(fig)
+        st.markdown(
+            'Mari kita lihat grafik di atas. Dari grafik tersebut, terlihat bahwa mayoritas orang yang dianalisis dalam studi ini tidak terkena diabetes. Namun, terdapat sejumlah kecil orang yang terdiagnosis dengan diabetes, yaitu hanya 268 orang dari keseluruhan. Ini menunjukkan bahwa diabetes mungkin masih merupakan masalah kesehatan yang signifikan, namun masih mempengaruhi sebagian kecil populasi.'
+        )
+        fig = px.histogram(df, x='Outcome', color='BMIGrup', barmode='group', hover_data=df.columns)
+        fig.update_layout(title='Jumlah pasien per kelompok BMI', xaxis_title='Outcome', yaxis_title='Jumlah', font=dict(size=15))
+        st.plotly_chart(fig)
+        st.markdown(
+            'Dari hasil analisis data, terlihat bahwa kondisi BMI memiliki korelasi yang kuat dengan kemungkinan seseorang terkena diabetes. Kelompok BMI yang paling berisiko adalah yang memiliki BMI lebih dari 30 (Obesitas II), dengan jumlah 219 orang yang terkena diabetes. Sementara itu, kelompok BMI 25-29,9 (Obesitas) juga memiliki risiko yang cukup tinggi dengan jumlah 40 orang yang terkena diabetes. Temuan ini menunjukkan betapa pentingnya menjaga kesehatan dan berat badan yang sehat untuk mencegah risiko terkena diabetes.'
+        )
+    with row3_0:
+        st.subheader('Korelasi antar fitur')
+        fig = px.imshow(df.corr(), color_continuous_scale='Blues')
+        st.plotly_chart(fig)
+elif selected == "Prediction":
+    with row0_1:
+        st.subheader('Masukkan Data')
+    with row1_1:
+        pregnancies = st.number_input('Pregnancies', min_value=0, max_value=20, value=0)
+        glucose = st.number_input('Glucose', min_value=0, max_value=200, value=0)
+        blood_pressure = st.number_input('Blood Pressure', min_value=0, max_value=200, value=0)
+        skin_thickness = st.number_input('Skin Thickness', min_value=0, max_value=100, value=0)
+    with row1_2:
+        insulin = st.number_input('Insulin', min_value=0, max_value=1000, value=0)
+        bmi = st.number_input('BMI', min_value=0, max_value=100, value=0)
+        diabetes_pedigree_function = st.number_input('Diabetes Pedigree Function', min_value=0, max_value=5, value=0)
+        age = st.number_input('Age', min_value=0, max_value=100, value=0)
+    with row3_0:
+        button = st.button('Predict')
+        if button:
+            data = np.array([[pregnancies, glucose, blood_pressure, skin_thickness, insulin, bmi, diabetes_pedigree_function, age]])
+            pred = model.predict(data)
+            if pred == 1:
+                st.write('Pasien terkena diabetes')
+            else:
+                st.write('Pasien tidak terkena diabetes')
