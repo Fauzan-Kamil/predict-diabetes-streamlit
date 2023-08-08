@@ -17,9 +17,16 @@ selected = option_menu(
 row0_spacer1, row0_1, row0_spacer2= st.columns(
     (0.1, 3.2, 0.1)
 )
-row1_spacer1, row1_1, row1_spacer2, row1_2 = st.columns((0.1, 1.5, 0.1, 1.5))
+#row1_spacer1, row1_1, row1_spacer2, row1_2 = st.columns((0.1, 1.5, 0.1, 1.5))
 #row1_spacer1, row1_1, row1_spacer2 = st.columns((0.1, 3.2, 0.1))
-row0_spacer3, row3_0, row0_spacer3= st.columns((0.1, 3.2, 0.1))
+#row0_spacer3, row3_0, row0_spacer3= st.columns((0.1, 3.2, 0.1))
+
+row0_spacer1, row0_1, row0_spacer2 = st.columns(
+    (0.1, 3.2, 0.1)
+)
+row1_spacer1, row1_1, row1_spacer2, row1_2 = st.columns((0.1, 1.5, 0.1, 1.5))
+row0_spacer3, row3_0, row0_spacer4 = st.columns((0.1, 3.2, 0.1))
+
 # Load dataset
 df = pd.read_csv('Data/diabetes.csv')
 # Kelompok usia
@@ -63,6 +70,17 @@ if selected == "Home":
         )
         st.markdown('Dataset : https://www.kaggle.com/datasets/akshaydattatraykhare/diabetes-dataset')
         st.write(df.head())
+        st.markdown('Atribut Dataset :')
+        st.markdown("1. Pregnancies: Merupakan jumlah kehamilan yang pernah dialami oleh seorang pasien ")
+        st.markdown("2. Glucose: Merupakan kadar gula darah pasien")
+        st.markdown("3. Blood Pressure: Merupakan tekanan darah pasien")
+        st.markdown("4. Skin Thickness: Merupakan ketebalan kulit pasien")
+        st.markdown("5. Insulin: Merupakan kadar insulin pasien")
+        st.markdown("6. BMI: Merupakan Body Mass Index pasien")
+        st.markdown("7. Diabetes Pedigree Function: Merupakan riwayat diabetes dalam keluarga pasien")
+        st.markdown("8. Age: Merupakan usia pasien")
+        st.markdown("9. Outcome: Merupakan hasil diagnosis pasien, 0 berarti tidak terkena diabetes, 1 berarti terkena diabetes")
+
 elif selected == "Data Visualisation":
     # Data Visualisasi dengan plotly
     with row1_1:
@@ -110,8 +128,8 @@ elif selected == "Prediction":
         skin_thickness = st.number_input('Skin Thickness', min_value=0, max_value=100, value=0)
     with row1_2:
         insulin = st.number_input('Insulin', min_value=0, max_value=1000, value=0)
-        bmi = st.number_input('BMI', min_value=0, max_value=100, value=0)
-        diabetes_pedigree_function = st.number_input('Diabetes Pedigree Function', min_value=0, max_value=5, value=0)
+        bmi = st.number_input('BMI')
+        diabetes_pedigree_function = st.number_input('Diabetes Pedigree Function' )
         age = st.number_input('Age', min_value=0, max_value=100, value=0)
     with row3_0:
         button = st.button('Predict')
