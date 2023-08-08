@@ -14,16 +14,12 @@ selected = option_menu(
     orientation="horizontal",
 )
 
-row0_spacer1, row0_1, row0_spacer2= st.columns(
-    (0.1, 3.2, 0.1)
-)
+#row0_spacer1, row0_1, row0_spacer2= st.columns((0.1, 3.2, 0.1))
 #row1_spacer1, row1_1, row1_spacer2, row1_2 = st.columns((0.1, 1.5, 0.1, 1.5))
 #row1_spacer1, row1_1, row1_spacer2 = st.columns((0.1, 3.2, 0.1))
 #row0_spacer3, row3_0, row0_spacer3= st.columns((0.1, 3.2, 0.1))
 
-row0_spacer1, row0_1, row0_spacer2 = st.columns(
-    (0.1, 3.2, 0.1)
-)
+row0_spacer1, row0_1, row0_spacer2 = st.columns((0.1, 3.2, 0.1))
 row1_spacer1, row1_1, row1_spacer2, row1_2 = st.columns((0.1, 1.5, 0.1, 1.5))
 row0_spacer3, row3_0, row0_spacer4 = st.columns((0.1, 3.2, 0.1))
 
