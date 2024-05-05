@@ -118,15 +118,15 @@ elif selected == "Prediction":
     with row0_1:
         st.subheader('Masukkan Data')
     with row1_1:
-        pregnancies = st.number_input('Pregnancies', min_value=0, max_value=20, value=0)
-        glucose = st.number_input('Glucose', min_value=0, max_value=200, value=0)
-        blood_pressure = st.number_input('Blood Pressure', min_value=0, max_value=200, value=0)
-        skin_thickness = st.number_input('Skin Thickness', min_value=0, max_value=100, value=0)
+        pregnancies = st.number_input('Jumlah Kehamilan', min_value=0, max_value=20, value=0)
+        glucose = st.number_input('Kadar Gula', min_value=0, max_value=200, value=0)
+        blood_pressure = st.number_input('Tekanan Darah', min_value=0, max_value=200, value=0)
+        skin_thickness = st.number_input('Ketebalan Kulit', min_value=0, max_value=100, value=0)
     with row1_2:
         insulin = st.number_input('Insulin', min_value=0, max_value=1000, value=0)
-        bmi = st.number_input('BMI')
-        diabetes_pedigree_function = st.number_input('Diabetes Pedigree Function' )
-        age = st.number_input('Age', min_value=0, max_value=100, value=0)
+        bmi = st.number_input('Body Mass Index (BMI)')
+        diabetes_pedigree_function = st.number_input('Diabetes Pedigree Function (Resiko Genetik)' )
+        age = st.number_input('Umur', min_value=0, max_value=100, value=0)
     with row3_0:
         button = st.button('Predict')
         if button:
